@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,600,700&display=swap" rel="stylesheet">
+    <link href="assets/css/ionicons.css" rel="stylesheet">
+    <link href="assets/css/flickity.css" rel="stylesheet">
+    <link href="assets/scss/bootstrap.css" rel="stylesheet">
+
+    <style>
+        .cart-section {
+            display: unset;
+        }
+        .dark-wrapper{
+            display: unset;
+        }
+        .quickViewBox{
+            display: unset;
+        }
+
+    </style>
+</head>
+
+<body>
+        <div id="app" @keyup.esc="Close" tabindex="0" >
+                  
+                    <div v-show="quickActive===1 || active===1" class="dark-wrapper"  @click.prevent="Close"  @click.stop ></div>
+                    <header class="border-bottom  border-borderline position-relative" >
+                        <div class="promo-header bg-info  ">
+                            <p class="mx-auto text-center m-0 font-secondry font-weight-semi-bold text-secondary bg-info">
+                                Free Shipping $80+ &amp; Money Back Guarantee
+                            </p>
+                        </div>
+                        <nav class="navbar navbar-expand-lg navbar-light bg-white p-0 ">
+                            <div class="container mx-auto">
+                                <a class="navbar-brand d-none d-xl-block" href="#">
+                                    <img src="assets/images/logo.jpg">
+                                </a>
+
+                                <div class="collapse navbar-collapse d-none d-xl-flex" id="navbarSupportedContent">
+                                    <ul class="navbar-nav ml-auto d-none d-xl-flex">
+                                        <li class="nav-item mx-xl-8 mx-2 py-4 megamenu">
+                                            <a class="nav-link px-0 text-uppercase text-secondary text-hover-primary" href="#">Shop</a>
+                                        </li>
+                                        <li class="nav-item mx-2 mx-xl-8 py-4">
+                                            <a class="nav-link px-0 text-uppercase text-secondary text-hover-primary" href="#">Hair
+                                                Quiz</a>
+                                        </li>
+                                        <li class="nav-item mx-2 mx-xl-8 py-4">
+                                            <a class="nav-link px-0 text-uppercase text-secondary text-hover-primary"
+                                                href="#">Reviews</a>
+                                        </li>
+                                        <li class="nav-item mx-2 mx-xl-8 py-4">
+                                            <a class="nav-link px-0 text-uppercase text-secondary text-hover-primary"
+                                                href="#">Rewards</a>
+                                        </li>
+                                    </ul>
+                                    <ul class="navbar-nav align-items-center ml-auto nav-icons d-none d-xl-flex">
+                                        <li class="nav-item  py-3 mx-xl-2"><a href="#search" class="nav-link search "><i
+                                                    class="search"><img src="assets/images/search.jpg" class="search-icon"></i></a></li>
+                                        <li class="nav-item  py-3 mx-20 mx-xl-2"><a href="#" class="nav-link "><img
+                                                    src="assets/images/acc.jpg" class="account-icon"></a></li>
+                                        <li class="nav-item py-3 pr-0 mx-xl-2">
+                                            <a href="#cart"
+                                                class="nav-link d-flex align-items-center justify-content-center position-relative "
+                                                @click.prevent="cartShow"><img
+                                                    src="assets/images/cart.jpg" class="cart-icon">
+                                                <span class="ml-2 letter-space-1 font-weight-normal text-secondary">{{cartItem}}</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </div>
+
+                              
+
+                            </div>
+                        </nav>
+
+                        
+                        
+                    </header>
+
+                    <div id="cart_menu" @click.stop ref="cartMenu" v-show="active===1" class="cart-section h-100 w-0 position-fixed bg-black pt-5">
+
+                        <div class="cart-menu-wrapper">
+                            <div class="cart-header position-relative p-3 bg-gray-400">
+                                <h4 class="letter-space-0 font-secondry font-weight-bold text-secondary m-0">Cart Items</h4>
+                                <a href="javascript:void(0)" @click.prevent="cartClose"
+                                    class="closebtn position-absolute text-secondary link-decoration-none">&times;</a>
+                            </div>
+                            <div class="cart-body">
+                                <cart :info="info" :d-index="dIndex" :cart-Items="cartItems" @remove-item="removeItem" ></cart>
+                               
+                            </div>
+                            <div class="cart-footer bg-gray-400 p-3">
+                                <div class="sub-total d-flex justify-content-between align-items-center mb-3">
+                                    <p class="letter-space-1 font-primary font-weight-bold text-secondary m-0 text-uppercase">SUBTOTAL
+                                    </p>
+                                    <p class="letter-space-1 font-primary font-weight-bold text-secondary m-0 text-uppercase"> $ {{addprice()}}.00</p>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 mb-3 col-sm-6 mb-sm-0">
+                                        <a href="#"
+                                            class="btn btn-primary px-2 px-sm-5 rounded-0 letter-space-1 text-uppercase text-white w-100">Cart</a>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <a href="#"
+                                            class="btn btn-secondry px-2 px-sm-4 rounded-0 letter-space-1 text-uppercase w-100">Checkout</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="quickViewBox" @click.stop ref="quickViewBox" v-show="quickActive===1">
+                        <box :info="info"  @quick-close="quickClose" :d-index="dIndex" @cart-show="cartShow" @add-item="addItem"></box>
+                       
+                    </div>
+
+                    <section class="heading-info p-0">
+                        <div class="container">
+                            <div class="row mt-5 d-none d-lg-block">
+                                <div class="col-md-12">
+                                    <div class="steps-section-wrap w-100 py-xl-10 py-6 position-relative ">
+                                        <div class="col-md-12 col-lg-6 ">
+                                            <div class="section-titles mb-6 mb-md-0 text-center text-lg-left pl-lg-6 pl-xl-11">
+                                                <h5
+                                                    class="letter-space-1 font-secondry font-weight-normal text-secondary text-uppercase mb-3 mb-md-2">
+                                                    Step 4 of wash + go system</h5>
+                                                <h1
+                                                    class=" font-size-bigger letter-space-0 font-secondry font-weight-bold text-secondary mb-3 mb-md-1">
+                                                    Pure Flaxseed Gel</h1>
+                                                <p
+                                                    class="letter-space-1 font-primary font-weight-light text-secondary mb-2 font-size-secondary">
+                                                    Check out our line of Pure Flaxseed Gels. We are the best on the shelves, made with
+                                                    handmade flaxseed gel and organic oils. You can't find this high-quality gel
+                                                    anywhere else.</p>
+                                            </div>
+                                        </div>
+                                        <img class="banner-steps position-absolute banner-steps-wrap w-100 h-100 "
+                                            src="assets/images/heading-info-img.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4 heading-mob d-block d-lg-none ">
+                                <div class="col-md-12">
+                                    <img class=" w-100 steps-img " src="assets/images/heading-info-img-mob.jpg">
+                                    <div class="steps-section-wrap w-100 position-relative ">
+                                        <div class="col-md-12 col-lg-6 pl-lg-5 px-lg-3 ">
+                                            <div class="section-titles mb-6 mb-lg-10 text-center text-lg-left px-lg-6 px-xl-11">
+                                                <h5
+                                                    class="letter-space-1 font-secondry font-weight-normal text-secondary text-uppercase mb-3">
+                                                    Step 4 of wash + go system</h5>
+                                                <h1
+                                                    class=" font-size-bigger letter-space-0 font-secondry font-weight-bold text-secondary mb-3">
+                                                    Pure Flaxseed Gel</h1>
+                                                <p
+                                                    class="letter-space-1 font-primary font-weight-light text-secondary mb-2 font-size-secondary">
+                                                    Check out our line of Pure Flaxseed Gels. We are the best on the shelves, made with
+                                                    handmade flaxseed gel and organic oils. You can't find this high-quality gel
+                                                    anywhere else.</p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+   
+
+
+        
+                <div class="container">
+                        <div class="row  p-0 px-xl-2 best-sellersinfo "  > 
+                            <div class="col-6  col-lg-3 py-3 text-center px-xl-4 d-flex" v-for="(item, index) in info" :key="index" >
+                                <sellers  :info="info" :index="index" @quick-close="quickClose" @cart-show="cartShow" @quick-open="quickOpen" @item-index="getIndex" @add-item="addItem"></sellers>
+                            </div>
+                        </div>
+                    
+                </div>
+        </div>
+
+
+
+
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-2.2.0.js"
+        integrity="sha256-oYqpLeqZe9cetUDV+TFiBZHp3uJ+X4F5eLs4W6uSTSE=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+    <script src="assets/js/flickity.pkgd.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="assets/js/vueIndex.js"></script>
+   
+
+</body>
+
+</html>
